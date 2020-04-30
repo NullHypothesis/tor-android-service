@@ -48,6 +48,18 @@ public class CustomTorInstaller extends TorInstaller {
          */
         String userDefinedBridgeList = Prefs.getBridgesList();
         byte bridgeType = (byte) (userDefinedBridgeList.length() > 5 ? 1 : 0);
+        // Terrible hack. Must keep in sync with topl::addBridgesFromResources.
+        if (bridgeType == 0) {
+            switch (userDefinedBridgeList) {
+                case "obfs4":
+                    bridgeType = 2;
+                    break;
+                case "meek":
+                    bridgeType = 3;
+                    break;
+            }
+        }
+
         ByteArrayInputStream bridgeTypeStream = new ByteArrayInputStream(new byte[]{bridgeType});
         InputStream bridgeStream = (bridgeType == 1) ? new ByteArrayInputStream((userDefinedBridgeList + "\r\n").getBytes())
                 : context.getResources().getAssets().open("common/bridges.txt");
