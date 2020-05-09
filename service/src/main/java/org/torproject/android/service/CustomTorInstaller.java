@@ -40,14 +40,17 @@ public class CustomTorInstaller extends TorInstaller {
     @Override
     public InputStream openBridgesStream() throws IOException {
         /*
-            BridgesList is an overloaded field, which can cause some confusion. The list can be:
-            1) a filter like obfs4 or meek OR 2) it can be a custom bridge
-            For (1), we just pass back all bridges, the filter will occur elsewhere in the library.
-            For (2) we return the bridge list as a raw stream
-            If length is greater than 5, then we know this is a custom bridge
+            BridgesList is an overloaded field, which can cause some confusion.
+            The list can be:
+              1) a filter like obfs4, meek, or snowflake OR
+              2) it can be a custom bridge
+            For (1), we just pass back all bridges, the filter will occur
+              elsewhere in the library.
+            For (2) we return the bridge list as a raw stream.
+            If length is greater than 9, then we know this is a custom bridge
          */
         String userDefinedBridgeList = Prefs.getBridgesList();
-        byte bridgeType = (byte) (userDefinedBridgeList.length() > 5 ? 1 : 0);
+        byte bridgeType = (byte) (userDefinedBridgeList.length() > 9 ? 1 : 0);
         // Terrible hack. Must keep in sync with topl::addBridgesFromResources.
         if (bridgeType == 0) {
             switch (userDefinedBridgeList) {
@@ -56,6 +59,9 @@ public class CustomTorInstaller extends TorInstaller {
                     break;
                 case "meek":
                     bridgeType = 3;
+                    break;
+                case "snowflake":
+                    bridgeType = 4;
                     break;
             }
         }

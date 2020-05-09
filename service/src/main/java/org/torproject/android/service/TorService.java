@@ -368,10 +368,12 @@ public final class TorService extends Service implements TorServiceConstants, Or
 
             //Check bridges to see if we need this
             File nativeDir = new File(getApplicationInfo().nativeLibraryDir);
-            File pluggableTransport = new File(nativeDir, "libObfs4proxy.so");
-            if(!pluggableTransport.canExecute()) pluggableTransport.setExecutable(true);
+            File pluggableTransportObfs = new File(nativeDir, "libObfs4proxy.so");
+            if(!pluggableTransportObfs.canExecute()) pluggableTransportObfs.setExecutable(true);
+            File pluggableTransportSnow = new File(nativeDir, "libSnowflake.so");
+            if(!pluggableTransportSnow.canExecute()) pluggableTransportSnow.setExecutable(true);
 
-            builder.configurePluggableTransportsFromSettings(pluggableTransport);
+            builder.configurePluggableTransportsFromSettings(pluggableTransportObfs, pluggableTransportSnow);
             mDataService.updateConfigBuilder(builder);
             onionProxyManager.getTorInstaller().updateTorConfigCustom
                     (builder.asString());
